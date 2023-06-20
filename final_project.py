@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1TKopsGZtVqyqYx_elekWFjlDifpkiNgT
 """
 
-!pip install dash
+
 
 import dash
 import dash_core_components as dcc
