@@ -60,5 +60,55 @@ def main():
     age_range = st.selectbox("Age Range", ['18-44', '45-69', '70-80 or older', 'All'])
     update_bar_plot(age_range)
 
-    # Heatmap - Correlation Matrix
-    st.subheader("Heat
+    # Heatmap - Correlation Matrix    # Heatmap - Correlation Matrix
+    st.subheader("Heatmap - Correlation Matrix")
+    st.write("Correlation Matrix of Features")
+    st.dataframe(diabetes[features].corr())
+
+    # Decision Tree Visualization
+    st.subheader("Decision Tree Visualization")
+    dot_data = tree.export_graphviz(
+        model,
+        feature_names=features,
+        class_names=class_names,
+        filled=True,
+        rounded=True,
+        special_characters=True,
+    )
+    graph = graphviz.Source(dot_data)
+    st.graphviz_chart(graph)
+
+def update_bar_plot(age_range):
+    if age_range == 'All':
+        diabetes_percentage_all = diabetes['Diabetes_binary'].value_counts(normalize=True) * 100
+        non_diabetes_percentage_all = 100 - diabetes_percentage_all
+        data = [
+            ['Diabetes', diabetes_percentage_all[1]],
+            ['Non-Diabetes', non_diabetes_percentage_all[1]]
+        ]
+    else:
+        age_column = 'Age_' + age_range
+        diabetes_counts = diabetes.groupby([age_column, 'Diabetes_binary']).size().unstack()
+        total_counts = diabetes_counts.sum(axis=1)
+        diabetes_percentage = diabetes_counts[1] / total_counts * 100
+        non_diabetes_percentage = diabetes_counts[0] / total_counts * 100
+        data = [
+            ['Diabetes', diabetes_percentage[1]],
+            ['Non-Diabetes', non_diabetes_percentage[1]]
+        ]
+
+    df = pd.DataFrame(data, columns=['Label', 'Percentage'])
+    fig = ff.create_annotated_bar(
+        df,
+        x='Label',
+        y='Percentage',
+        colors=['#FF4F4F', '#73E68C'],
+        annotation_text=df['Percentage'].astype(str) + '%',
+        title="Diabetes vs. Non-Diabetes Percentage"
+    )
+    fig.update_layout(showlegend=False)
+    st.plotly_chart(fig)
+
+if __name__ == '__main__':
+    main()
+
