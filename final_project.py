@@ -1,3 +1,9 @@
+pip install pandas
+pip install numpy
+pip install scikit-learn
+pip install graphviz
+pip install plotly
+
 import streamlit as st
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
