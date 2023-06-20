@@ -11,6 +11,8 @@ def update_heatmap(age_range):
         min_age, max_age = 1, 13
     else:
         min_age, max_age = map(int, age_range.split('-'))
+        st.text(min_age)
+        st.text(max_age)
     filtered_diabetes = diabetes[(diabetes['Age'] >= min_age) & (diabetes['Age'] <= max_age)]
     correlation_matrix = filtered_diabetes.corr().round(3)
 
